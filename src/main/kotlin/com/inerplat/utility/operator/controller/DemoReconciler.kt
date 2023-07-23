@@ -1,6 +1,6 @@
 package com.inerplat.utility.operator.controller
 
-import com.inerplat.utility.operator.model.crd.Demo
+import com.inerplat.utility.operator.crd.Demo
 import com.inerplat.utility.operator.model.crd.DemoStatus
 import com.inerplat.utility.operator.utility.WorkloadUtils
 import io.fabric8.kubernetes.client.KubernetesClient
@@ -25,8 +25,9 @@ class DemoReconciler(
     }
 
     override fun cleanup(resource: Demo, context: Context<Demo>): DeleteControl {
-        if(client.apps().deployments().inNamespace("default").withName("${resource.metadata.name}-crd")?.get() != null) {
-            client.apps().deployments().inNamespace("default").withName("${resource.metadata.name}-crd").delete()
+        val target = client.apps().deployments().inNamespace("default").withName("${resource.metadata.name}-crd")
+        if(target?.get() != null) {
+            target.delete()
         }
         return DeleteControl.defaultDelete()
     }
