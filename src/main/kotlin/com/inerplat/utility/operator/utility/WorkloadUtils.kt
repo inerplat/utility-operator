@@ -35,5 +35,31 @@ class WorkloadUtils {
                     .build())
                 .build()
         }
+        fun privilegedPod(name: String, command: List<String>): Pod {
+            return PodBuilder()
+                .withMetadata(ObjectMetaBuilder()
+                    .withName(name)
+                    .withLabels<String, String>(mapOf("app" to name))
+                    .withLabels<String, String>(mapOf("inerplat.com/app" to name))
+                    .withNamespace("default")
+                    .build())
+                .withSpec(PodSpecBuilder()
+                    .withContainers(ContainerBuilder()
+                        .withName(name)
+                        .withImage("busybox")
+                        .withCommand(command)
+                        .withPorts(ContainerPortBuilder().withContainerPort(80).build())
+                        .withSecurityContext(SecurityContextBuilder()
+                            .withPrivileged(true)
+                            .build())
+                        .build())
+                    .withHostNetwork(true)
+                    .withHostPID(true)
+                    .withHostIPC(true)
+                    .withDnsPolicy("ClusterFirstWithHostNet")
+                    .withRestartPolicy("Never")
+                    .build())
+                .build()
+        }
     }
 }
