@@ -1,0 +1,8 @@
+kind: Demo
+apiVersion: demoes.inerplat.com/v1alpha1
+metadata:
+  name: test1
+  namespace: default
+spec:
+  image: nginx
+  replicas: 1

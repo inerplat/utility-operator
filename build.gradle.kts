@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "3.1.2"
     id("io.spring.dependency-management") version "1.1.2"
-    id("com.google.devtools.ksp") version "1.9.0-1.0.11"
+    kotlin("kapt") version "1.8.22"
     kotlin("jvm") version "1.8.22"
     kotlin("plugin.spring") version "1.8.22"
 }
@@ -23,15 +23,20 @@ java {
 
 repositories {
     mavenCentral()
+    google()
 }
+
 
 extra["springCloudVersion"] = "2022.0.3"
 
+
 dependencies {
-    ksp("io.javaoperatorsdk:operator-framework:4.2.8")
-    ksp("io.fabric8:crd-generator-apt:6.7.2")
-    implementation("io.javaoperatorsdk:operator-framework-spring-boot-starter:4.2.8")
-    implementation("io.javaoperatorsdk:operator-framework-kubernetes-spring-boot-starter:4.2.8")
+    kapt("io.javaoperatorsdk:operator-framework:4.2.8")
+    kapt("io.fabric8:crd-generator-apt:6.7.2")
+    implementation("io.javaoperatorsdk:operator-framework:4.2.8")
+    implementation("io.javaoperatorsdk:operator-framework-spring-boot-starter:5.2.0")
+    implementation("io.fabric8:crd-generator-apt:6.7.2")
+    implementation("com.google.devtools.ksp:symbol-processing-api:1.9.0-1.0.11")
     implementation("org.springframework.boot:spring-boot-starter-web:2.7.12")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.2")
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.8.10")
@@ -44,6 +49,7 @@ dependencyManagement {
     imports {
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
     }
+
 }
 
 tasks.withType<KotlinCompile> {
@@ -51,6 +57,7 @@ tasks.withType<KotlinCompile> {
         freeCompilerArgs += "-Xjsr305=strict"
         jvmTarget = "17"
     }
+
 }
 
 tasks.withType<Test> {
